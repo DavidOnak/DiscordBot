@@ -24,6 +24,15 @@ for (const file of commandFiles) {
 
 const prefix = '!';  // Set your desired command prefix
 
+function wordExistsInString(inputString, wordToFind) {
+  // Convert both the input string and the target word to lowercase
+  const lowerInput = inputString.toLowerCase();
+  const lowerWord = wordToFind.toLowerCase();
+
+  // Use the includes method to check if the lowercased word exists in the lowercased string
+  return lowerInput.includes(lowerWord);
+}
+
 // const resource = createAudioResource('videoName.mp3');
 
 // Get the mentioned users, excluding the message sender and bots
