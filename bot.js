@@ -25,12 +25,12 @@ for (const file of commandFiles) {
 const prefix = '!';  // Set your desired command prefix
 
 function wordExistsInString(inputString, wordToFind) {
-  // Convert both the input string and the target word to lowercase
   const lowerInput = inputString.toLowerCase();
   const lowerWord = wordToFind.toLowerCase();
 
-  // Use the includes method to check if the lowercased word exists in the lowercased string
-  return lowerInput.includes(lowerWord);
+  // Use word boundaries (\b) to check if the lowercased word exists as a standalone word in the lowercased string
+  const regex = new RegExp(`\\b${lowerWord}\\b`);
+  return regex.test(lowerInput);
 }
 
 // const resource = createAudioResource('videoName.mp3');
@@ -67,29 +67,30 @@ client.on('messageCreate', async (message) => {
     console.log('From:', sender);
 
     if (!sender.bot) {
-        if (input === '?') return message.channel.send(`Get on now! ${await getOtherUserMentions(message)}`);
+        if (!message.content.startsWith(prefix)) {
+          if (input === '?') return message.channel.send(`Get on now! ${await getOtherUserMentions(message)}`);
 
-        if (!message.content.startsWith(prefix)) return;
-
-        const commandIndex = message.content.indexOf(prefix);
-       // Extract the command and the rest of the message
-        const commandAndArgs = message.content.slice(commandIndex + prefix.length).trim();
-        const firstSpaceIndex = commandAndArgs.indexOf(' ');
-        const commandName = firstSpaceIndex !== -1 ? commandAndArgs.slice(0, firstSpaceIndex) : commandAndArgs;
-        const args = firstSpaceIndex !== -1 ? commandAndArgs.slice(firstSpaceIndex + 1) : '';
-
-        console.log('Command:', commandName);
-        console.log('args:', args);
-        //if (command === 'play') playCommand(message, args);
-        if (!client.commands.has(commandName)) return message.reply(f`Not a real command. Use command ${prefix}help for full list of commands.`);
-
-        const command = client.commands.get(commandName);
-
-        try {
-          command.execute(message, args, client.commands);
-        } catch (error) {
-          console.error(error);
-          return message.reply('There was a fuck wucky executing the command.');
+        } else {
+          const commandIndex = message.content.indexOf(prefix);
+          // Extract the command and the rest of the message
+          const commandAndArgs = message.content.slice(commandIndex + prefix.length).trim();
+          const firstSpaceIndex = commandAndArgs.indexOf(' ');
+          const commandName = firstSpaceIndex !== -1 ? commandAndArgs.slice(0, firstSpaceIndex) : commandAndArgs;
+          const args = firstSpaceIndex !== -1 ? commandAndArgs.slice(firstSpaceIndex + 1) : '';
+  
+          console.log('Command:', commandName);
+          console.log('args:', args);
+          //if (command === 'play') playCommand(message, args);
+          if (!client.commands.has(commandName)) return message.reply(f`Not a real command. Use command ${prefix}help for full list of commands.`);
+  
+          const command = client.commands.get(commandName);
+  
+          try {
+            command.execute(message, args, client.commands);
+          } catch (error) {
+            console.error(error);
+            return message.reply('There was a fuck wucky executing the command.');
+          }
         }
     } 
 });
