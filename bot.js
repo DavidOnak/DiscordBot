@@ -60,6 +60,18 @@ client.on('ready', () => {
     // }, 3600000); // Interval in milliseconds (10 seconds in this case)
 });
 
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+  // Check if the author of the edited message is a bot to avoid processing bot messages
+  if (newMessage.author.bot) return;
+
+  // Console details on message edit
+  console.log(`Message edited by ${newMessage.author.tag} in channel ${newMessage.channel.name}`);
+  console.log('Old Message:', oldMessage.content);
+  console.log('New Message:', newMessage.content);
+
+  newMessage.reply("https://tenor.com/view/rock-one-eyebrow-raised-rock-staring-the-rock-gif-22113367");
+});
+
 client.on('messageCreate', async (message) => {
     const sender = message.author;
     const input = message.content;
