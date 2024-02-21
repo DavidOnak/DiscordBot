@@ -75,11 +75,29 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
 client.on('messageCreate', async (message) => {
     const sender = message.author;
     const input = message.content;
+    const urlPattern = /(https?:\/\/[^\s]+)/;
     console.log('Message received:', input);
     console.log('From:', sender);
 
     if (!sender.bot) {
         if (!message.content.startsWith(prefix)) {
+          if (urlPattern.test(message.content)) {
+            // return message.channel.send("https://tenor.com/view/rock-one-eyebrow-raised-rock-staring-the-rock-gif-22113367");
+            return
+          }
+          // Check if the message mentions any users
+          if (message.mentions.users.size > 0) {
+            message.mentions.users.forEach((user) => {
+              // Check if the mentioned user is the same as the bot
+              if (user.id === client.user.id) {
+                console.log('Bot has been mentioned in the message:', message.content);
+                return message.reply("What?");
+              } else {
+                return message.channel.send("https://tenor.com/view/rock-one-eyebrow-raised-rock-staring-the-rock-gif-22113367");
+              }
+            });
+          }
+          // Check for key words in message
           if (input === '?') return message.channel.send(`Get on now! ${await getOtherUserMentions(message)}`);
 
         } else {
