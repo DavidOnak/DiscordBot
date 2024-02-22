@@ -25,8 +25,27 @@ async function getOtherUserMentions(message) {
     return mentionedMembers.join(' ');
 }
 
+// Returns null if no Haiku can be formed with input message and returns a Haiku of message if it exits.
 function detectHaiku(message) {
+    const words = message.split(/\s+/);
 
+    // A Haiku consists of 3 lines with 5, 7, 5 syllables
+    let syllableCount = [0, 0, 0] 
+    let haiku = ['', '', '']
+
+    // Will itterating through words, build haiku, if no longer possible return null
+    for (const word of words) {
+        if (syllableCount[0] < 5) {
+            syllableCount[0] += syllable(word);
+            if (syllableCount[0] > 5) return null; else haiku[0] += ` ${word}`;
+        } else if (syllableCount[1] < 7) {
+            syllableCount[1] += syllable(word);
+            if (syllableCount[1] > 7) return null; else haiku[1] += ` ${word}`;
+        } else if (syllableCount[2] < 5) {
+            syllableCount[2] += syllable(word);
+            if (syllableCount[2] > 5) return null; else haiku[2] += ` ${word}`;
+        } else return haiku;
+    }
 }
 
 module.exports = {
