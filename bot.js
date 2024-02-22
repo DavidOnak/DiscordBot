@@ -1,4 +1,5 @@
 const { Client, GatewayIntentBits } = require('discord.js');
+const { wordExistsInString, getOtherUserMentions } = require('./stringUtil');
 const fs = require('fs');
 
 // Set bot permissions
@@ -24,29 +25,7 @@ for (const file of commandFiles) {
 
 const prefix = '!';  // Set your desired command prefix
 
-function wordExistsInString(inputString, wordToFind) {
-  const lowerInput = inputString.toLowerCase();
-  const lowerWord = wordToFind.toLowerCase();
-
-  // Use word boundaries (\b) to check if the lowercased word exists as a standalone word in the lowercased string
-  const regex = new RegExp(`\\b${lowerWord}\\b`);
-  return regex.test(lowerInput);
-}
-
 // const resource = createAudioResource('videoName.mp3');
-
-// Get the mentioned users, excluding the message sender and bots
-async function getOtherUserMentions(message) {
-  const guild = message.guild;
-  await guild.members.fetch();
-
-  const mentionedMembers = guild.members.cache
-    .filter(member => !member.user.bot && member.id !== message.author.id)
-    .map(member => `<@${member.id}>`);
-
-  // Create a mention string
-  return mentionedMembers.join(' ');
-}
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
